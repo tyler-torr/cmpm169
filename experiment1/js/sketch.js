@@ -15,6 +15,14 @@ var baseSpeed = 0.02;
 var maxSpeed = 0.2;
 var circles = [];
 
+function resizeScreen() {
+  centerHorz = canvasContainer.width() / 2; // Adjusted for drawing logic
+  centerVert = canvasContainer.height() / 2; // Adjusted for drawing logic
+  console.log("Resizing...");
+  resizeCanvas(canvasContainer.width(), canvasContainer.height());
+  // redrawCanvas(); // Redraw everything based on new size
+}
+
 function setup() {
   createCanvas(800, 800);
   noFill();
