@@ -7,8 +7,9 @@
 
 // Constants - User-servicable parts
 // In a longer project I like to put these in a separate file
-var tileCount = 5;
+'use strict';
 
+var tileCount = 5;
 var maxDistance = 250;
 var baseSpeed = 0.02;
 var maxSpeed = 0.2;
