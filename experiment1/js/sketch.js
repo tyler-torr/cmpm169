@@ -23,6 +23,17 @@ var baseSpeed = 0.02;
 var maxSpeed = 0.2;
 var circles = [];
 
+class MyClass {
+  constructor(param1, param2) {
+      this.property1 = param1;
+      this.property2 = param2;
+  }
+
+  myMethod() {
+      // code to run when method is called
+  }
+}
+
 function resizeScreen() {
   centerHorz = canvasContainer.width() / 2; // Adjusted for drawing logic
   centerVert = canvasContainer.height() / 2; // Adjusted for drawing logic
@@ -31,6 +42,7 @@ function resizeScreen() {
   // redrawCanvas(); // Redraw everything based on new size
 }
 
+// setup() function is called once when the program starts
 function setup() {
   canvasContainer = $("#canvas-container");
   let canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
@@ -44,6 +56,7 @@ function setup() {
     resizeScreen();
   });
   resizeScreen();
+
   noFill();
   strokeWeight(3);
   
@@ -62,6 +75,9 @@ function setup() {
 
 function draw() {
   clear();
+  background(220);
+  // call a method on the instance
+  myInstance.myMethod();
 
   circles.forEach(function(circle) {
     var distance = dist(mouseX, mouseY, circle.x, circle.y);
