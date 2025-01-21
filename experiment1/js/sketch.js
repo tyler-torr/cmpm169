@@ -7,11 +7,8 @@
 
 // Constants - User-servicable parts
 // In a longer project I like to put these in a separate file
-'use strict';
-
 var tileCount = 5;
 
-var moduleAlpha = 180;
 var maxDistance = 250;
 var baseSpeed = 0.02;
 var maxSpeed = 0.2;
@@ -22,14 +19,14 @@ function setup() {
   noFill();
   strokeWeight(3);
   
-  // Initialize oscillators for each grid point
+  // Initialize grid
   for (var gridY = 0; gridY < width; gridY += 30) {
     for (var gridX = 0; gridX < height; gridX += 30) {
       circles.push({
         x: gridX,
         y: gridY,
-        angle: random(1, 5),
-        maxDiameter: random(30, 45)
+        size: random(1, 5),
+        maxDiameter: random(25, 45)
       });
     }
   }
@@ -40,20 +37,19 @@ function draw() {
 
   circles.forEach(function(circle) {
     var distance = dist(mouseX, mouseY, circle.x, circle.y);
+    
+    // Change circle's size
+    circle.size += baseSpeed + map(distance, 0, maxDistance, maxSpeed, 0);
 
-    circle.angle += baseSpeed + map(distance, 0, maxDistance, maxSpeed, 0);
-
-    // Holy fuck this sucked
-    var diameter = map(sin(circle.angle), -1, 1, 10, circle.maxDiameter);
+    // Holy fuck this sucked. Change diameter of a circle
+    var diameter = map(sin(circle.size), -1, 1, 10, circle.maxDiameter);
 
     // Change color based on distance to the cursor
     var alpha = map(distance, 0, maxDistance, 255, 50);
     var colorIntensity = map(distance, 0, maxDistance, 255, 0);
     stroke(colorIntensity, 0, 255 - colorIntensity, alpha);
 
-    push();
     ellipse(circle.x, circle.y, diameter, diameter);
-    pop();
   });
 }
 
