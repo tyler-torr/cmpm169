@@ -1,14 +1,12 @@
 // sketch.js - purpose and description here
 // Author: Tyler James Torrella
-// Date: Jan 20 2025
+// Date: Jan 13 2025
 
 // Here is how you might set up an OOP p5.js project
 // Note that p5.js looks for a file called sketch.js
 
 // Constants - User-servicable parts
 // In a longer project I like to put these in a separate file
-'use strict';
-
 const VALUE1 = 1;
 const VALUE2 = 2;
 
@@ -17,21 +15,15 @@ let myInstance;
 let canvasContainer;
 var centerHorz, centerVert;
 
-var tileCount = 5;
-var maxDistance = 250;
-var baseSpeed = 0.02;
-var maxSpeed = 0.2;
-var circles = [];
-
 class MyClass {
-  constructor(param1, param2) {
-      this.property1 = param1;
-      this.property2 = param2;
-  }
+    constructor(param1, param2) {
+        this.property1 = param1;
+        this.property2 = param2;
+    }
 
-  myMethod() {
-      // code to run when method is called
-  }
+    myMethod() {
+        // code to run when method is called
+    }
 }
 
 function resizeScreen() {
@@ -44,6 +36,7 @@ function resizeScreen() {
 
 // setup() function is called once when the program starts
 function setup() {
+  // place our canvas, making it fit our container
   canvasContainer = $("#canvas-container");
   let canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
   canvas.parent("canvas-container");
@@ -56,48 +49,31 @@ function setup() {
     resizeScreen();
   });
   resizeScreen();
-
-  noFill();
-  strokeWeight(3);
-  
-  // Initialize grid
-  for (var gridY = 0; gridY < width; gridY += 30) {
-    for (var gridX = 0; gridX < height; gridX += 30) {
-      circles.push({
-        x: gridX,
-        y: gridY,
-        size: random(1, 5),
-        maxDiameter: random(25, 45)
-      });
-    }
-  }
 }
 
+// draw() function is called repeatedly, it's the main animation loop
 function draw() {
-  clear();
-  background(220);
+  background(220);    
   // call a method on the instance
   myInstance.myMethod();
 
-  circles.forEach(function(circle) {
-    var distance = dist(mouseX, mouseY, circle.x, circle.y);
-    
-    // Change circle's size
-    circle.size += baseSpeed + map(distance, 0, maxDistance, maxSpeed, 0);
+  // Set up rotation for the rectangle
+  push(); // Save the current drawing context
+  translate(centerHorz, centerVert); // Move the origin to the rectangle's center
+  rotate(frameCount / 100.0); // Rotate by frameCount to animate the rotation
+  fill(234, 31, 81);
+  noStroke();
+  rect(-125, -125, 250, 250); // Draw the rectangle centered on the new origin
+  pop(); // Restore the original drawing context
 
-    // Holy fuck this sucked. Change diameter of a circle
-    var diameter = map(sin(circle.size), -1, 1, 10, circle.maxDiameter);
-
-    // Change color based on distance to the cursor
-    var alpha = map(distance, 0, maxDistance, 255, 50);
-    var colorIntensity = map(distance, 0, maxDistance, 255, 0);
-    stroke(colorIntensity, 0, 255 - colorIntensity, alpha);
-
-    // Draw circle
-    ellipse(circle.x, circle.y, diameter, diameter);
-  });
+  // The text is not affected by the translate and rotate
+  fill(255);
+  textStyle(BOLD);
+  textSize(140);
+  text("p5*", centerHorz - 105, centerVert + 40);
 }
 
-function keyReleased() {
-  if (key == 's' || key == 'S') saveCanvas(gd.timestamp(), 'png');
+// mousePressed() function is called once after every time a mouse button is pressed
+function mousePressed() {
+    // code to run when mouse is pressed
 }
