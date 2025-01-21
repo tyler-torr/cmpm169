@@ -7,73 +7,56 @@
 
 // Constants - User-servicable parts
 // In a longer project I like to put these in a separate file
-const VALUE1 = 1;
-const VALUE2 = 2;
+'use strict';
 
-// Globals
-let myInstance;
-let canvasContainer;
-var centerHorz, centerVert;
+var tileCount = 5;
 
-class MyClass {
-    constructor(param1, param2) {
-        this.property1 = param1;
-        this.property2 = param2;
-    }
+var moduleAlpha = 180;
+var maxDistance = 250;
+var baseSpeed = 0.02;
+var maxSpeed = 0.2;
+var circles = [];
 
-    myMethod() {
-        // code to run when method is called
-    }
-}
-
-function resizeScreen() {
-  centerHorz = canvasContainer.width() / 2; // Adjusted for drawing logic
-  centerVert = canvasContainer.height() / 2; // Adjusted for drawing logic
-  console.log("Resizing...");
-  resizeCanvas(canvasContainer.width(), canvasContainer.height());
-  // redrawCanvas(); // Redraw everything based on new size
-}
-
-// setup() function is called once when the program starts
 function setup() {
-  // place our canvas, making it fit our container
-  canvasContainer = $("#canvas-container");
-  let canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
-  canvas.parent("canvas-container");
-  // resize canvas is the page is resized
-
-  // create an instance of the class
-  myInstance = new MyClass("VALUE1", "VALUE2");
-
-  $(window).resize(function() {
-    resizeScreen();
-  });
-  resizeScreen();
+  createCanvas(800, 800);
+  noFill();
+  strokeWeight(3);
+  
+  // Initialize oscillators for each grid point
+  for (var gridY = 0; gridY < width; gridY += 30) {
+    for (var gridX = 0; gridX < height; gridX += 30) {
+      circles.push({
+        x: gridX,
+        y: gridY,
+        angle: random(1, 5),
+        maxDiameter: random(30, 45)
+      });
+    }
+  }
 }
 
-// draw() function is called repeatedly, it's the main animation loop
 function draw() {
-  background(220);    
-  // call a method on the instance
-  myInstance.myMethod();
+  clear();
 
-  // Set up rotation for the rectangle
-  push(); // Save the current drawing context
-  translate(centerHorz, centerVert); // Move the origin to the rectangle's center
-  rotate(frameCount / 100.0); // Rotate by frameCount to animate the rotation
-  fill(234, 31, 81);
-  noStroke();
-  rect(-125, -125, 250, 250); // Draw the rectangle centered on the new origin
-  pop(); // Restore the original drawing context
+  circles.forEach(function(circle) {
+    var distance = dist(mouseX, mouseY, circle.x, circle.y);
 
-  // The text is not affected by the translate and rotate
-  fill(255);
-  textStyle(BOLD);
-  textSize(140);
-  text("p5*", centerHorz - 105, centerVert + 40);
+    circle.angle += baseSpeed + map(distance, 0, maxDistance, maxSpeed, 0);
+
+    // Holy fuck this sucked
+    var diameter = map(sin(circle.angle), -1, 1, 10, circle.maxDiameter);
+
+    // Change color based on distance to the cursor
+    var alpha = map(distance, 0, maxDistance, 255, 50);
+    var colorIntensity = map(distance, 0, maxDistance, 255, 0);
+    stroke(colorIntensity, 0, 255 - colorIntensity, alpha);
+
+    push();
+    ellipse(circle.x, circle.y, diameter, diameter);
+    pop();
+  });
 }
 
-// mousePressed() function is called once after every time a mouse button is pressed
-function mousePressed() {
-    // code to run when mouse is pressed
+function keyReleased() {
+  if (key == 's' || key == 'S') saveCanvas(gd.timestamp(), 'png');
 }
