@@ -24,7 +24,18 @@ function resizeScreen() {
 }
 
 function setup() {
-  createCanvas(800, 800);
+  canvasContainer = $("#canvas-container");
+  let canvas = createCanvas(canvasContainer.width(), canvasContainer.height());
+  canvas.parent("canvas-container");
+  // resize canvas is the page is resized
+
+  // create an instance of the class
+  myInstance = new MyClass("VALUE1", "VALUE2");
+
+  $(window).resize(function() {
+    resizeScreen();
+  });
+  resizeScreen();
   noFill();
   strokeWeight(3);
   
