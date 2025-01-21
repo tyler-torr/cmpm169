@@ -1,6 +1,6 @@
 // project.js - purpose and description here
-// Author: Your Name
-// Date:
+// Author: Tyler James Torrella
+// Date: Jan 20 2025
 
 // NOTE: This is how we might start a basic JavaaScript OOP project
 

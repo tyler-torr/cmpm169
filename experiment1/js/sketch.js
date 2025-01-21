@@ -1,6 +1,6 @@
 // sketch.js - purpose and description here
-// Author: Your Name
-// Date:
+// Author: Tyler James Torrella
+// Date: Jan 20 2025
 
 // Here is how you might set up an OOP p5.js project
 // Note that p5.js looks for a file called sketch.js
@@ -8,6 +8,14 @@
 // Constants - User-servicable parts
 // In a longer project I like to put these in a separate file
 'use strict';
+
+const VALUE1 = 1;
+const VALUE2 = 2;
+
+// Globals
+let myInstance;
+let canvasContainer;
+var centerHorz, centerVert;
 
 var tileCount = 5;
 var maxDistance = 250;
@@ -69,6 +77,7 @@ function draw() {
     var colorIntensity = map(distance, 0, maxDistance, 255, 0);
     stroke(colorIntensity, 0, 255 - colorIntensity, alpha);
 
+    // Draw circle
     ellipse(circle.x, circle.y, diameter, diameter);
   });
 }
