@@ -9,6 +9,12 @@
 // In a longer project I like to put these in a separate file
 'use strict';
 
+/*
+/ Credit to Programming Chaos for their helpful tutorial on how to use Perlin noise to generate
+/ a weather map, in Generating Procedural Maps using Perlin Noise: 
+/ https://www.youtube.com/watch?v=6BdYzfVOyBY
+*/
+
 // ---- Start of Wes Modes's prewritten code to make it fit within the Canvas ----
 const VALUE1 = 1;
 const VALUE2 = 2;
@@ -18,11 +24,16 @@ let myInstance;
 let canvasContainer;
 var centerHorz, centerVert;
 
-var tileCount = 5;
-var maxDistance = 250;
-var baseSpeed = 0.02;
-var maxSpeed = 0.2;
-var circles = [];
+const backgroundColor = [135, 206, 235]; // Default: [135, 206, 235]
+const rainColor = [138, 43, 226]; // Default: [138, 43, 226]
+const rainStroke = 2; // Default: 2
+
+let raindrops = [];
+let weatherMap = [];
+
+let noiseScale = 0.0015;
+let windOffset = 0;
+let windOffsetScale = 0.001;
 
 class MyClass {
   constructor(param1, param2) {
@@ -60,44 +71,55 @@ function setup() {
   
   // ---- End of Wes Modes's prewritten code to make it fit within the Canvas ----
 
-  noFill();
-  strokeWeight(3);
-  
-  // Initialize grid
-  for (var gridY = 0; gridY < width; gridY += 30) {
-    for (var gridX = 0; gridX < height; gridX += 30) {
-      circles.push({
-        x: gridX,
-        y: gridY,
-        size: random(1, 5),
-        maxDiameter: random(25, 45)
-      });
+  // Weather map
+  for (let x = 0; x < width; x++) {
+    weatherMap[x] = []; // JS doesn't allow nested functions normally so this will do
+    for (let y = 0; y < height; y++) {
+      weatherMap[x][y] = noise(x * noiseScale, y * noiseScale);
     }
   }
 }
 
 function draw() {
-  clear();
-  // call a method on the instance
-  myInstance.myMethod();
+  background(backgroundColor);
+  stroke(rainColor);
+  strokeWeight(rainStroke);
 
-  circles.forEach(function(circle) {
-    var distance = dist(mouseX, mouseY, circle.x, circle.y);
-    
-    // Change circle's size
-    circle.size += baseSpeed + map(distance, 0, maxDistance, maxSpeed, 0);
+  let wind = map(noise(windOffset), 0, 1, -1, 1);
+  windOffset += windOffsetScale; // Update current windOffset by the change
 
-    // Okay this sucked, this is how to change circle diameter relative to the speed (use sin())
-    var diameter = map(sin(circle.size), -1, 1, 10, circle.maxDiameter);
+  let x = random(width);
+  let intensity = weatherMap[int(x)][int(random(height))];
+  if (intensity > 0.5) {
+    raindrops.push(new Raindrop(x, 0)); // Create raindrop
+  }
 
-    // Change color based on distance to the cursor
-    var alpha = map(distance, 0, maxDistance, 255, 50);
-    var colorIntensity = map(distance, 0, maxDistance, 255, 0);
-    stroke(colorIntensity, 0, 255 - colorIntensity, alpha);
+  for (let raindrop of raindrops) {
+    raindrop.display();
+    raindrop.move(wind);
+  }
 
-    // Draw circle
-    ellipse(circle.x, circle.y, diameter, diameter);
-  });
+  // Remove raindrops that fall off the screen
+  raindrops = raindrops.filter(drop => drop.y < height);
+}
+
+// Raindrop class
+class Raindrop {
+  constructor(x, y) {
+    this.x = x;
+    this.y = y;
+    this.speed = random(15, 20);
+    this.length = random(10, 25);
+  }
+
+  move(wind) {
+    this.y += this.speed;
+    this.x += wind; // Apply wind to horizontal movement
+  }
+
+  display() {
+    line(this.x, this.y, this.x - windOffset, this.y + this.length); // Draw the raindrop
+  }
 }
 
 function keyReleased() {
