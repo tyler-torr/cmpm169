@@ -2,7 +2,7 @@
 <html>
 <head>
 	<!-- This title is used for tabs and bookmarks -->
-	<title>Experiment X - Subject/Topic</title>
+	<title>Experiment 3 - Generative Methods</title>
 
 	<!-- Use UTF character set, a good idea with any webpage -->
 	<meta charset="UTF-8" />
@@ -32,7 +32,7 @@
 	<main id="content">
 		<section>
 
-			<h1>Experiment X - Subject/Topic</h1>
+			<h1>Experiment 3 - Generative Methods</h1>
 
 			<div class="minor-section">
 				<div id="canvas-container">
@@ -45,17 +45,22 @@
 
 			<div class="minor-section">
 				<h2>Description</h2>
-				<p>What are you trying to acomplish with this experiment?</p>
+				<p>Simulates rain coming down from the sky as a weather system. Wind pushes the rain slightly left or right. Noise used for both rain and wind generation.</p>
 			</div>
 
 			<div class="minor-section">
 				<h2>Technical</h2>
-				<p>Describe in detail what you did technically and how it works?</p>
+				<p>Based on a weather map made with a nested loop, Perlin noise is used to see where to spawn a Raindrop object with randomized length and speed at the top of \n
+					the screen. It falls down, being angled to the left or right in direction based on a wind offset also determined by noise, before being deleted once it reaches \n
+					the bottom.
+				</p>
 			</div>
 
 			<div class="minor-section">
 				<h2>Reflection</h2>
-				<p>Each person that worked on the code should reflect on the process, the difficulties, and the successes of the experiment.</p>
+				<p>Using noise for a weather map was surprisingly easy, and I feel like I could've done something more complex than this. Wind was also easy to add: It's possible
+					I didn't do enough for this assignment?
+				</p>
 			</div>
 
 		</section>
