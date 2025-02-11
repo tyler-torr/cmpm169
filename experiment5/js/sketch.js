@@ -19,7 +19,7 @@ let canvasContainer;
 var centerHorz, centerVert;
 
 let angle = 30;
-let swapTimer = 5350; // Amount of time before gray and white swap. This could've been way smarter
+let swapTimer = 5300; // Amount of time before gray and white swap. This could've been way smarter
 let lastSwitchTime = 0;
 let isGray = false;
 let showMode = "ALL"; // Can be "ALL", "FRONT", or "BACK"
