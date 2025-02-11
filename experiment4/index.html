@@ -2,7 +2,7 @@
 <html>
 <head>
 	<!-- This title is used for tabs and bookmarks -->
-	<title>Experiment 4 - Images, Videos & Sound Art</title>
+	<title>Experiment 4 - Images, Video & Sound Art</title>
 
 	<!-- Use UTF character set, a good idea with any webpage -->
 	<meta charset="UTF-8" />
@@ -32,7 +32,7 @@
 	<main id="content">
 		<section>
 
-			<h1>Experiment 4 - Images, Videos & Sound Art</h1>
+			<h1>Experiment 4 - Images, Video & Sound Art</h1>
 
 			<div class="minor-section">
 				<div id="canvas-container">
@@ -45,21 +45,18 @@
 
 			<div class="minor-section">
 				<h2>Description</h2>
-				<p>Simulates a dog walking around, occasionally barking. If you click on the screen the dog will trail to where you clicked. Double click to make the dog move faster.</p>
+				<p>Simulates rain coming down from the sky as a weather system. Wind pushes the rain slightly left or right. Noise used for both rain and wind generation.</p>
 			</div>
 
 			<div class="minor-section">
 				<h2>Technical</h2>
-				<p>Based on a weather map made with a nested loop, Perlin noise is used to see where to spawn a Raindrop object with randomized length and speed at the top of \n
-					the screen. It falls down, being angled to the left or right in direction based on a wind offset also determined by noise, before being deleted once it reaches \n
-					the bottom.
+				<p>Dog chases down your cursor's latest click location, speeding up with a double click. It does this by calculating a vector and constantly shiftings its magnitude and direction. Occasionally types "BARK" based on a timer.
 				</p>
 			</div>
 
 			<div class="minor-section">
 				<h2>Reflection</h2>
-				<p>Using noise for a weather map was surprisingly easy, and I feel like I could've done something more complex than this. Wind was also easy to add: It's possible
-					I didn't do enough for this assignment?
+				<p>Didn't fully execute the assignment's prompt; originally had more planned but got stuck trying to make the vector movement work.
 				</p>
 			</div>
 

@@ -24,16 +24,15 @@ let myInstance;
 let canvasContainer;
 var centerHorz, centerVert;
 
-const backgroundColor = [135, 206, 235]; // Default: [135, 206, 235]
-const rainColor = [138, 43, 226]; // Default: [138, 43, 226]
-const rainStroke = 2; // Default: 2
-
-let raindrops = [];
-let weatherMap = [];
-
-let noiseScale = 0.0015;
-let windOffset = 0;
-let windOffsetScale = 0.001;
+let pos;
+let vel;
+let target;
+let trail = [];
+let alpha = 255;
+let lastClickTime = 0;
+let speedMultiplier = 1;
+let barkStartTime = 0;
+let barkPos;
 
 class MyClass {
   constructor(param1, param2) {
@@ -71,57 +70,65 @@ function setup() {
   
   // ---- End of Wes Modes's prewritten code to make it fit within the Canvas ----
 
-  // Weather map
-  for (let x = 0; x < width; x++) {
-    weatherMap[x] = []; // JS doesn't allow nested functions normally so this will do
-    for (let y = 0; y < height; y++) {
-      weatherMap[x][y] = noise(x * noiseScale, y * noiseScale);
-    }
-  }
+  pos = createVector(width / 2, height / 2); // Dog starts in the center
+  let angle = noise(frameCount * 0.01) * TWO_PI;
+  vel = p5.Vector.fromAngle(angle).mult(2); // Choose random direction to start walking to
+  target = pos.copy();
 }
 
 function draw() {
-  background(backgroundColor);
-  stroke(rainColor);
-  strokeWeight(rainStroke);
+  background(30);
+  
+  // Make the trail behind the current position of the dog fade away over time
+  // by changing its alpha value
+  for (let i = 0; i < trail.length - 1; i++) {
+    let alphaValue = map(i, 0, trail.length - 1, 0, 255); // This is probably not how you do this
+    stroke(255, alphaValue);
+    line(trail[i].x, trail[i].y, trail[i + 1].x, trail[i + 1].y);
+  }
+  trail.push(pos.copy());
 
-  let wind = map(noise(windOffset), 0, 1, -1, 1);
-  windOffset += windOffsetScale; // Update current windOffset by the change
+  // Slowly move the dog towards the most recently clicked position
+  // Emulates 'forward' movement by slowly edging movement to the left or right
+  // Kind of like turning in real life. Credit to ChatGPT for showing me this.
+  let desired = p5.Vector.sub(target, pos).setMag(0.1);
+  vel.add(desired).setMag(2); // Smoothly steer toward the target
+  vel.mult(speedMultiplier);
+  pos.add(vel);
 
-  let x = random(width);
-  let intensity = weatherMap[int(x)][int(random(height))];
-  if (intensity > 0.5) {
-    raindrops.push(new Raindrop(x, 0)); // Create raindrop
+  // Bounce the dog off the wall
+  if (pos.x < 0 || pos.x > width || pos.y < 0 || pos.y > height) {
+    vel.mult(-1 * random(0, 0.3));
   }
 
-  for (let raindrop of raindrops) {
-    raindrop.display();
-    raindrop.move(wind);
+  // BARK code to show that this is a dog
+  let distanceToTarget = pos.dist(target);
+  if ((random() < 0.01 || (distanceToTarget < 20 && random() < 0.1)) && millis() - barkStartTime > 300) { 
+    barkStartTime = millis(); // The dog is getting restless.....
+    let noiseOffset = noise(frameCount * 0.1) * 50;
+    let barkOffset = p5.Vector.random2D().mult(noiseOffset);
+    barkPos = pos.copy().add(barkOffset);
   }
 
-  // Remove raindrops that fall off the screen
-  raindrops = raindrops.filter(drop => drop.y < height);
+  if (millis() - barkStartTime < 300 && barkPos) { // Show BARK for 0.3 seconds
+    fill(255);
+    noStroke();
+    textSize(16);
+    text("BARK", barkPos.x, barkPos.y); // BARK ABRK. BAR KK BARK BAR KARBK BARK
+  }
 }
 
-// Raindrop class
-class Raindrop {
-  constructor(x, y) {
-    this.x = x;
-    this.y = y;
-    this.speed = random(15, 20);
-    this.length = random(10, 25);
-  }
+function mousePressed() {
+  target.set(mouseX, mouseY);
 
-  move(wind) {
-    this.y += this.speed;
-    this.x += wind; // Apply wind to horizontal movement
-  }
+  let currentTime = millis();
+  let timeDiff = currentTime - lastClickTime;
 
-  display() {
-    line(this.x, this.y, this.x - windOffset, this.y + this.length); // Draw the raindrop
+  // Dog gets excited with rapid clicks
+  if (timeDiff < 200) {
+    speedMultiplier = 2;
+  } else {
+    speedMultiplier = 1;
   }
-}
-
-function keyReleased() {
-  if (key == 's' || key == 'S') saveCanvas(gd.timestamp(), 'png');
+  lastClickTime = currentTime;
 }
