@@ -20,17 +20,6 @@ let lastSwitchTime = 0;
 let isGray = false;
 let showMode = "ALL"; // Can be "ALL", "FRONT", or "BACK"
 
-const backgroundColor = [135, 206, 235]; // Default: [135, 206, 235]
-const rainColor = [138, 43, 226]; // Default: [138, 43, 226]
-const rainStroke = 2; // Default: 2
-
-let raindrops = [];
-let weatherMap = [];
-
-let noiseScale = 0.0015;
-let windOffset = 0;
-let windOffsetScale = 0.001;
-
 class MyClass {
   constructor(param1, param2) {
       this.property1 = param1;
@@ -46,7 +35,7 @@ function resizeScreen() {
   centerHorz = canvasContainer.width() / 2; // Adjusted for drawing logic
   centerVert = canvasContainer.height() / 2; // Adjusted for drawing logic
   console.log("Resizing...");
-  resizeCanvas(canvasContainer.width(), canvasContainer.height());
+  resizeCanvas(canvasContainer.width(), canvasContainer.height(), WEBGL);
   // redrawCanvas(); // Redraw everything based on new size
 }
 
