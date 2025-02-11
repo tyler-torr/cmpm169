@@ -14,6 +14,10 @@ const VALUE1 = 1;
 const VALUE2 = 2;
 
 // Globals
+let myInstance;
+let canvasContainer;
+var centerHorz, centerVert;
+
 let angle = 30;
 let swapTimer = 5350; // Amount of time before gray and white swap. This could've been way smarter
 let lastSwitchTime = 0;
