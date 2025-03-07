@@ -38,6 +38,11 @@ function resizeScreen() {
   // redrawCanvas(); // Redraw everything based on new size
 }
 
+function preload() {
+  handPose = ml5.handPose();
+  font = loadFont("assets/Inconsolata.otf");
+}
+
 // setup() function is called once when the program starts
 function setup() {
   canvasContainer = $("#canvas-container");
@@ -65,10 +70,6 @@ function setup() {
   let button = createButton("Press to Shoot");
   button.position(width/2, 7*height/10);
   button.mousePressed(buttonYay);
-}
-
-function preload() {
-  font = loadFont("assets/Inconsolata.otf");
 }
 
 function draw() {
