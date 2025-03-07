@@ -61,7 +61,11 @@ function setup() {
   // ---- End of Wes Modes's prewritten code to make it fit within the Canvas ----
 
   background(33, 153, 240);
-  textFont(font);
+  if (font) {
+    textFont(font);
+  } else {
+    console.error("Font failed to load!");
+  }
   video = createCapture(VIDEO);
   video.size(640, 480);
   video.hide();
