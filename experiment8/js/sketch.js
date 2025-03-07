@@ -1,15 +1,12 @@
-// sketch.js - purpose and description here
-// Author: Tyler James Torrella
-// Date: Feb 10 2025
+// sketch.js
+// Author: Tyler & Jason
+// Date: March 5th
 
 // Here is how you might set up an OOP p5.js project
 // Note that p5.js looks for a file called sketch.js
 
 // Constants - User-servicable parts
 // In a longer project I like to put these in a separate file
-'use strict';
-
-// ---- Start of Wes Modes's prewritten code to make it fit within the Canvas ----
 const VALUE1 = 1;
 const VALUE2 = 2;
 
@@ -17,17 +14,28 @@ const VALUE2 = 2;
 let myInstance;
 let canvasContainer;
 var centerHorz, centerVert;
-let font;
+let video;
+let img;
+let handPose;
+let hands = [];
+let handType = ["None","None"]
+let handScore = [0,0]
+let scoreFlag = false;
 
 class MyClass {
-  constructor(param1, param2) {
-      this.property1 = param1;
-      this.property2 = param2;
-  }
+    constructor(param1, param2) {
+        this.property1 = param1;
+        this.property2 = param2;
+    }
 
-  myMethod() {
-      // code to run when method is called
-  }
+    myMethod() {
+        // code to run when method is called
+    }
+}
+
+function preload() {
+  handPose = ml5.handPose();
+  font = loadFont("assets/Inconsolata.otf");
 }
 
 function resizeScreen() {
@@ -38,13 +46,9 @@ function resizeScreen() {
   // redrawCanvas(); // Redraw everything based on new size
 }
 
-function preload() {
-  handPose = ml5.handPose();
-  font = loadFont("assets/Inconsolata.otf");
-}
-
 // setup() function is called once when the program starts
 function setup() {
+  // place our canvas, making it fit our container
   canvasContainer = $("#canvas-container");
   let canvas = createCanvas(canvasContainer.width(), canvasContainer.height(), WEBGL);
   canvas.parent("canvas-container");
@@ -57,25 +61,20 @@ function setup() {
     resizeScreen();
   });
   resizeScreen();
-  
-  // ---- End of Wes Modes's prewritten code to make it fit within the Canvas ----
 
   background(33, 153, 240);
-  if (font) {
-    textFont(font);
-  } else {
-    console.error("Font failed to load!");
-  }
+  textFont(font);
   video = createCapture(VIDEO);
   video.size(640, 480);
   video.hide();
   handPose.detectStart(video, gotHands);
-
+  
   let button = createButton("Press to Shoot");
   button.position(width/2, 7*height/10);
   button.mousePressed(buttonYay);
 }
 
+// draw() function is called repeatedly, it's the main animation loop
 function draw() {
   background(33, 153, 240);
   textFont(font);
@@ -84,7 +83,7 @@ function draw() {
   allFingersClosed(hands, 85);
   allFingersOpen(hands, 35);
   twoFingersOpen(hands, 60);
-
+  
 
   if (hands.length == 2) {
     if (scoreFlag == true) {
@@ -181,8 +180,7 @@ function allFingersClosed(hands, threshold) {
         ringDistance <= threshold &&
         pinkyDistance <= threshold
       ) {
-        handType[i] = "Rock"
-        //console.log(i,"rocks")
+        handType[i] = "Rock";
       }
     }
   }
@@ -214,8 +212,7 @@ function allFingersOpen(hands, threshold) {
         pinkyDistance > threshold
       ) {
         if (handType[i] != "Rock") {
-          handType[i] = "Paper"
-          //console.log(i,"papers")
+          handType[i] = "Paper";
         }
       }
     }
@@ -239,8 +236,7 @@ function twoFingersOpen(hands, threshold) {
 
       if (indexDistance > threshold && middleDistance > threshold) {
         if (handType[i] != "Rock" && handType[i] != "Paper") {
-          handType[i] = "Scissors"
-          //console.log(i,"scissors")
+          handType[i] = "Scissors";
         }
       }
     }
